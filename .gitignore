@@ -1,0 +1,10 @@
+t.py
+
+config/
+venv/
+webdriver/
+
+__pycache__/
+
+.spec
+.exe
