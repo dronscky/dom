@@ -32,9 +32,12 @@ class GetRequestsBot:
                     response_json = r.json()
                     return response_json.get("debtSubReqList")
                 except json.JSONDecodeError:
+                    print("Ошибка JSONDecodeError")
                     return "JSONDecodeError"
+            # case 504:
+            #     return "Error 504"
             case _:
-                return "Error_gis_response"
+                return "Error"
 
     def manage(self):
         return self.get_json_response()

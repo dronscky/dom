@@ -4,6 +4,7 @@ import sys
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt, QDate, QThread, pyqtSignal, QObject
+from PyQt5.QtGui import QIcon
 
 from bots import GetRequestsBot, SendResponseBot
 from esia import AuthGIS
@@ -58,7 +59,8 @@ class MainWindow(QMainWindow):
 
     def setupUi(self):
         self.setWindowTitle("Графический интерфейс")
-        self.resize(500, 400)
+        self.setWindowIcon(QIcon("logo.png"))
+        self.resize(300, 400)
 
         self.centralWidget = QWidget()
         self.setCentralWidget(self.centralWidget)
@@ -135,6 +137,7 @@ class MainWindow(QMainWindow):
                 self.auth.account[str, str].connect(self.auth_input)
                 self.auth.exec()
             case "Выход":
+                               
                 self.close()
 
     def auth_input(self, login, password):
@@ -173,6 +176,9 @@ class MainWindow(QMainWindow):
                 self.status_work.setText("Завершено")
                 self.status_work.setStyleSheet("color: green; font-weight: bold")
 
+    def __del__(self) -> None:
+        db_client.close_conn()
+
 
 class WorkerThread(QThread):
     resp_count_signal = pyqtSignal(str, int)
@@ -206,7 +212,7 @@ class WorkerThread(QThread):
             if delta.seconds < 800:
                 delta = datetime.now() - stime
                 requests_data = request_bot.manage()
-                if requests_data not in ("Error_gis_response", "JSONDecodeError"):
+                if requests_data not in ("Error", "JSONDecodeError"):
                     if requests_data:
                         count = len(requests_data)
                         if count != 100:
@@ -238,6 +244,7 @@ class WorkerThread(QThread):
                         bots_state = False
                         marker = True
                 else:
+                    print("Некорректный ответ от сервера ГИС ЖКХ")
                     del auth
                     del request_bot
                     del response_bot
@@ -248,6 +255,7 @@ class WorkerThread(QThread):
                     stime = datetime.now()
                     delta = datetime.now() - stime
             else:
+                print("Обновление куки")
                 del auth
                 del request_bot
                 del response_bot
@@ -258,8 +266,8 @@ class WorkerThread(QThread):
                 stime = datetime.now()
                 delta = datetime.now() - stime
             if marker:
+                print("Робот завершил работу")
                 del auth
-                db_client.close_conn()
                 self.status_signal.emit('complete')
                 break
 
