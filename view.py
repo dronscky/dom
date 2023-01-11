@@ -118,10 +118,11 @@ class MainWindow(QMainWindow):
         primary_menu.addAction("Авторизоваться")
         primary_menu.addSeparator()
         primary_menu.addAction("Выход")
-        primary_menu.triggered[QAction].connect(self.processtrigger)
+        primary_menu.triggered[QAction].connect(self.menu_trigger)
 
         about_menu = QMenu("Справка", self)
         about_menu.addAction("О программе")
+        about_menu.triggered[QAction].connect(self.help_trigger)
 
         menubar.addMenu(primary_menu)
         menubar.addMenu(about_menu)
@@ -130,15 +131,24 @@ class MainWindow(QMainWindow):
         self.statusbar = self.statusBar()
         self.statusbar.showMessage("Готов")
 
-    def processtrigger(self, q):
+    def menu_trigger(self, q):
         match q.text():
             case "Авторизоваться":
                 self.auth = AuthWindow()
                 self.auth.account[str, str].connect(self.auth_input)
                 self.auth.exec()
             case "Выход":
-                               
                 self.close()
+
+    def help_trigger(self, q):
+        match q.text():
+            case "О программе":
+                about = QMessageBox()
+                about.setWindowTitle("О программе")
+                about.setText("Версия программы 1.1.0")
+                about.setIcon(QMessageBox.Information)
+                about.setStandardButtons(QMessageBox.Ok)
+                about.exec_()       
 
     def auth_input(self, login, password):
         label = QLabel()
