@@ -29,11 +29,32 @@ def write_response_to_db(deb_id, answer):
     db_client.execute_command_params(sql, record)
 
 
+class OutputLogger(QObject):
+    log_signal = pyqtSignal(str)
+
+    def __init__(self, io_stream):
+        super().__init__()
+        self.io_stream = io_stream
+
+    def write(self, text):
+        # self.io_stream.write(text)
+        self.log_signal.emit(text)
+
+    def flush(self):
+        self.io_stream.flush()
+
+
+OUTPUT_LOGGER_STDOUT = OutputLogger(sys.stdout)
+sys.stdout = OUTPUT_LOGGER_STDOUT
+
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi()
         self.show()
+
+        OUTPUT_LOGGER_STDOUT.log_signal.connect(self.browser.append)
 
     def setupUi(self):
         self.setWindowTitle("Графический интерфейс")
@@ -175,7 +196,7 @@ class WorkerThread(QThread):
         total_answer = 0
         stime = datetime.now()
         delta = datetime.now() - stime
-
+        #
         while True:
             if not bots_state:
                 request_bot = GetRequestsBot(self.b_date, session)
@@ -241,18 +262,6 @@ class WorkerThread(QThread):
                 db_client.close_conn()
                 self.status_signal.emit('complete')
                 break
-
-
-class OutputLogger(QObject):
-    cons_signal = pyqtSignal(str)
-
-    def __init__(self, io_stream):
-        super(OutputLogger).__init__()
-        self.iostream = io_stream
-
-    def write(self, text):
-        self.io_stream.write(text)
-        self.cons_signal.emit()
 
 
 class AuthWindow(QDialog):
