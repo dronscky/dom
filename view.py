@@ -60,7 +60,7 @@ class MainWindow(QMainWindow):
     def setupUi(self):
         self.setWindowTitle("Графический интерфейс")
         self.setWindowIcon(QIcon("logo.png"))
-        self.resize(300, 400)
+        self.resize(330, 400)
 
         self.centralWidget = QWidget()
         self.setCentralWidget(self.centralWidget)
@@ -109,7 +109,7 @@ class MainWindow(QMainWindow):
         grid.addWidget(resp_label, 3, 0)
         grid.addWidget(self.count_resp_label, 3, 1)
         grid.addWidget(self.do_button, 4, 0, 1, 2)
-        grid.addWidget(self.browser, 5, 0, 1, 3)
+        grid.addWidget(self.browser, 5, 0, 4, 2)
         
     def _create_menubar(self):
         menubar = self.menuBar()
@@ -288,6 +288,7 @@ class AuthWindow(QDialog):
     def __init__(self):
         super().__init__()
         self.setupUi()
+        self.setWindowIcon(QIcon("logo.png"))
         self.read_config()
 
     def setupUi(self):
