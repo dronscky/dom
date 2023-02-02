@@ -39,7 +39,8 @@ class OutputLogger(QObject):
 
     def write(self, text):
         # self.io_stream.write(text)
-        self.log_signal.emit(text)
+        d = datetime.now().strftime('%d.%m.%Y %H:%M:%S ')
+        self.log_signal.emit(d+text)
 
     def flush(self):
         self.io_stream.flush()
@@ -254,8 +255,7 @@ class WorkerThread(QThread):
                         bots_state = False
                         marker = True
                 else:
-                    d = datetime.now().strftime('%d.%m.%Y %H:%M:%S')
-                    print(f"{d} Некорректный ответ от сервера ГИС ЖКХ")
+                    print("Некорректный ответ от сервера ГИС ЖКХ")
                     del auth
                     del request_bot
                     del response_bot
@@ -266,8 +266,7 @@ class WorkerThread(QThread):
                     stime = datetime.now()
                     delta = datetime.now() - stime
             else:
-                d = datetime.now().strftime('%d.%m.%Y %H:%M:%S')
-                print(f"{d} Обновление куки")
+                print("Обновление куки")
                 del auth
                 del request_bot
                 del response_bot
@@ -278,8 +277,7 @@ class WorkerThread(QThread):
                 stime = datetime.now()
                 delta = datetime.now() - stime
             if marker:
-                d = datetime.now().strftime('%d.%m.%Y %H:%M:%S')
-                print(f"{d} Робот завершил работу")
+                print("Робот завершил работу")
                 del auth
                 self.status_signal.emit('complete')
                 break
