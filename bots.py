@@ -23,7 +23,8 @@ class GetRequestsBot:
                 r = self._session.post(link, json=json_data)
                 break
             except:
-                print('Ошибка получения ответа от сервера...')
+                d = datetime.now().strftime('%d.%m.%Y %H:%M:%S')
+                print(f'{d} Ошибка получения ответа от сервера...')
                 time.sleep(5)
         
         match r.status_code:
@@ -32,7 +33,8 @@ class GetRequestsBot:
                     response_json = r.json()
                     return response_json.get("debtSubReqList")
                 except json.JSONDecodeError:
-                    print("Ошибка JSONDecodeError")
+                    d = datetime.now().strftime('%d.%m.%Y %H:%M:%S')
+                    print(f"{d} Ошибка JSONDecodeError")
                     return "JSONDecodeError"
             # case 504:
             #     return "Error 504"
@@ -43,7 +45,8 @@ class GetRequestsBot:
         return self.get_json_response()
 
     def __del__(self) -> None:
-        print('Экземпляр класса получения запросов удален...')
+        d = datetime.now().strftime('%d.%m.%Y %H:%M:%S')
+        print(f'{d} Экземпляр класса получения запросов удален...')
 
 
 class SendResponseBot:
@@ -54,7 +57,8 @@ class SendResponseBot:
 
     def __del__(self) -> None:
         # self._db.close_conn()
-        print('Экземпляр класса ответов удален...')
+        d = datetime.now().strftime('%d.%m.%Y %H:%M:%S')
+        print(f'{d} Экземпляр класса ответов удален...')
 
     def check_for_debt(self, fias_code: str, apartment: str, begin_date: str, end_date: str) -> tuple:
         """   
@@ -128,7 +132,8 @@ class SendResponseBot:
                     else:
                         return "Forbidden"
                 except:
-                    print('Сервер разорвал соединение...')
+                    d = datetime.now().strftime('%d.%m.%Y %H:%M:%S')
+                    print(f'{d} Сервер разорвал соединение...')
                     time.sleep(10)
                     attempt += 1
             else:

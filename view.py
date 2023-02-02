@@ -254,7 +254,8 @@ class WorkerThread(QThread):
                         bots_state = False
                         marker = True
                 else:
-                    print("Некорректный ответ от сервера ГИС ЖКХ")
+                    d = datetime.now().strftime('%d.%m.%Y %H:%M:%S')
+                    print(f"{d} Некорректный ответ от сервера ГИС ЖКХ")
                     del auth
                     del request_bot
                     del response_bot
@@ -265,7 +266,8 @@ class WorkerThread(QThread):
                     stime = datetime.now()
                     delta = datetime.now() - stime
             else:
-                print("Обновление куки")
+                d = datetime.now().strftime('%d.%m.%Y %H:%M:%S')
+                print(f"{d} Обновление куки")
                 del auth
                 del request_bot
                 del response_bot
@@ -276,7 +278,8 @@ class WorkerThread(QThread):
                 stime = datetime.now()
                 delta = datetime.now() - stime
             if marker:
-                print("Робот завершил работу")
+                d = datetime.now().strftime('%d.%m.%Y %H:%M:%S')
+                print(f"{d} Робот завершил работу")
                 del auth
                 self.status_signal.emit('complete')
                 break
