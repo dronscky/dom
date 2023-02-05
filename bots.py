@@ -122,6 +122,7 @@ class SendResponseBot:
                     response_formation_status = self.response_formation(deb_id, debtors)
                     if response_formation_status != 403:
                         send_response_status = self.send_response(deb_id)
+                        time.sleep(0.5)
                         if send_response_status != 403:
                             attempt = 0
                             return status

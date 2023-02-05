@@ -40,7 +40,9 @@ class OutputLogger(QObject):
     def write(self, text):
         # self.io_stream.write(text)
         d = datetime.now().strftime('%d.%m.%Y %H:%M:%S ')
-        self.log_signal.emit(d+text)
+        if text != '\n':
+            text = d + text    
+        self.log_signal.emit(text)
 
     def flush(self):
         self.io_stream.flush()
