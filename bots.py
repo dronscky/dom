@@ -70,7 +70,8 @@ class SendResponseBot:
             INNER JOIN sud_sp_debtors ssd ON ssd.sp_id = sp.id
             INNER JOIN sud_groups sg ON sg.group_id = sp.group_id
             INNER JOIN occupations o ON o.occ_id_join = sg.occ_id_join
-            WHERE supplier_b_fias = '{fias_code}' 
+            WHERE sp.group_id NOT IN (SELECT group_id FROM sud_sp_cancel) 
+            AND supplier_b_fias = '{fias_code}' 
             AND {apartment_part}
             AND sp.date_start between '{begin_date}' AND '{end_date}'
         """
