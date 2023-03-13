@@ -1,4 +1,12 @@
+import logging.config
+
 from requestium import Session
+
+from settings import logger_config
+
+
+logging.config.dictConfig(logger_config)
+logger = logging.getLogger(__name__)
 
 
 class AuthGIS:
@@ -19,18 +27,21 @@ class AuthGIS:
         self.authorization()
         
     def authorization(self):
-        self.s.driver.get("https://dom.gosuslugi.ru")
-        self.s.driver.ensure_element_by_xpath("//a[@ng-click='sign()']", state='clickable').ensure_click()
-        #   ввод данных
-        self.s.driver.ensure_element_by_id("login").send_keys(self._login)
-        self.s.driver.ensure_element_by_id("password").send_keys(self._pwd)
-        #   вход
-        self.s.driver.ensure_element_by_xpath("//button[@class='plain-button plain-button_wide']", state='clickable').ensure_click()
-        #   выбор организации
-        self.s.driver.ensure_element_by_xpath("//p[text()[contains(., 'ОГРН: 1020202870555')]]", state='clickable').ensure_click()
-        #   неГОСТ подключение
-        self.s.driver.ensure_element_by_id("saveCookie", state='clickable').ensure_click()
-        self.s.driver.ensure_element_by_id("bContinue", state='clickable').ensure_click()
+        try:
+            self.s.driver.get("https://dom.gosuslugi.ru")
+            self.s.driver.ensure_element_by_xpath("//a[@ng-click='sign()']", state='clickable').ensure_click()
+            #   ввод данных
+            self.s.driver.ensure_element_by_id("login").send_keys(self._login)
+            self.s.driver.ensure_element_by_id("password").send_keys(self._pwd)
+            #   вход
+            self.s.driver.ensure_element_by_xpath("//button[@class='plain-button plain-button_wide']", state='clickable').ensure_click()
+            #   выбор организации
+            self.s.driver.ensure_element_by_xpath("//p[text()[contains(., 'ОГРН: 1020202870555')]]", state='clickable').ensure_click()
+            #   неГОСТ подключение
+            self.s.driver.ensure_element_by_id("saveCookie", state='clickable').ensure_click()
+            self.s.driver.ensure_element_by_id("bContinue", state='clickable').ensure_click()
+        except:
+            logger.exception('Authorization fault')
 
     def get_session(self):
         self.s.transfer_driver_cookies_to_session()
